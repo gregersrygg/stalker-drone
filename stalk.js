@@ -6,7 +6,7 @@ var arDrone = require('ar-drone');
 var Navigation = require('./cv-navigation.js');
 var control = arDrone.createUdpControl();
 var log = console.log;
-
+var face_cascade = new cv.CascadeClassifier('./data/haarcascade_frontalface_alt2.xml');
 
 log('Connecting png stream ...');
 
@@ -19,6 +19,7 @@ var mimeTypes = {
   'js':      'text/javascript'
 };
 var nav = new Navigation(640, 480);
+
 
 var pngStream = arDrone.createPngStream();
 
@@ -62,7 +63,7 @@ var detectFace = function(){
      //im.resize(im.width() / 2, im.height() / 2);
      //log("Resize: " + im.width() + "x" + im.height());
 
-     im.detectObject('./data/haarcascade_frontalface_alt2.xml', {}, function(err, faces) {
+     face_cascade.detectMultiScale(im, function(err, faces) {
 
        for(var k = 0; k < faces.length; k++) {
 
