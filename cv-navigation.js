@@ -27,18 +27,18 @@ Navigation.prototype.reset = function () {
 };
 
 Navigation.prototype.json = function () {
-  var data = {};
+  var data = {}, damping = 3;
   
   if (this.z > 0) {
-    data.up = this.z;
+    data.up = this.z / damping;
   } else if (this.z < 0) {
-    data.down = -this.z;
+    data.down = -this.z / damping;
   }
   
   if (this.jaw > 0) {
-    data.clockwise = this.jaw;
+    data.clockwise = this.jaw / damping;
   } else if (this.jaw < 0) {
-    data.counterClockwise = -this.jaw;
+    data.counterClockwise = -this.jaw / damping;
   }
   
   return data;
