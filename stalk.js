@@ -4,7 +4,7 @@ var cv = require('opencv');
 var fs      = require('fs');
 var arDrone = require('ar-drone');
 var log = console.log;
-
+var face_cascade = new cv.CascadeClassifier('./data/haarcascade_frontalface_alt2.xml');
 
 log('Connecting png stream ...');
 
@@ -16,6 +16,7 @@ var mimeTypes = {
   'html':    'text/html',
   'js':      'text/javascript'
 };
+
 
 var pngStream = arDrone.createPngStream();
 
@@ -33,7 +34,7 @@ var detectFace = function(){
      im.resize(im.width() / 2, im.height() / 2);
      log("Resize: " + im.width() + "x" + im.height());
 
-     im.detectObject('./data/haarcascade_frontalface_alt2.xml', {}, function(err, faces) {
+     face_cascade.detectMultiScale(im, function(err, faces) {
 
        for(var k = 0; k < faces.length; k++) {
 
