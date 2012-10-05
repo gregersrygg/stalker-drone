@@ -33,7 +33,6 @@ pngStream
 var ref  = {};
 var pcmd = {};
 
-/*
 console.log('Recovering from emergency mode if there was one ...');
 ref.emergency = true;
 setTimeout(function() {
@@ -55,7 +54,7 @@ setInterval(function() {
   control.ref(ref);
   control.pcmd(pcmd);
   control.flush();
-}, 30);*/
+}, 30);
 
 var detectFace = function(){
   cv.readImage(lastPngBuffer, function(err, im){
