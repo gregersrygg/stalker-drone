@@ -13,27 +13,35 @@ Navigation.prototype.getOptions = function(rectangles) {
     centerX = rect.x + rect.width/2;
     centerY = rect.y + rect.height/2;
     
-    this.up = ((this.height/2) - centerY) / -(this.height/2);
-    this.clockwise = ((this.width/2) - centerX) / -(this.width/2);
+    this.z = ((this.height/2) - centerY) / (this.height/2);
+    this.jaw = ((this.width/2) - centerX) / -(this.width/2);
   }
   
   return this.json();
 };
 
 Navigation.prototype.reset = function () {
-  this.front = 0;
-  this.right = 0;
-  this.up = 0;
-  this.clockwise = 0;
+  this.pitch = 0;
+  this.z = 0;
+  this.jaw = 0;
 };
 
 Navigation.prototype.json = function () {
-  return {
-    front: this.front,
-    right: this.right,
-    up: this.up,
-    clockwise: this.clockwise
-  };
+  var data = {};
+  
+  if (this.z > 0) {
+    data.up = this.z;
+  } else if (this.z < 0) {
+    data.down = -this.z;
+  }
+  
+  if (this.jaw > 0) {
+    data.clockwise = this.jaw;
+  } else if (this.jaw < 0) {
+    data.counterClockwise = -this.jaw;
+  }
+  
+  return data;
 };
 
 module.exports = Navigation;

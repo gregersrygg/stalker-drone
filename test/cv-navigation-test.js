@@ -8,12 +8,7 @@ buster.testCase("Test CV Navigation", {
   },
   "test should start with hover navigation data": function () {
     var opts = this.nav.getOptions();
-    assert.equals(opts, {
-      front: 0,
-      right: 0,
-      up: 0,
-      clockwise: 0
-    });
+    assert.equals(opts, {});
   },
   
   "test should hover when rectangle in center": function () {
@@ -23,15 +18,10 @@ buster.testCase("Test CV Navigation", {
       y:      140,
       height: 40
     }]);
-    assert.equals(opts, {
-      front: 0,
-      right: 0,
-      up: 0,
-      clockwise: 0
-    });
+    assert.equals(opts, {});
   },
   
-  "test should move up when rectangle above center": function () {
+  "test should move down when rectangle below center": function () {
     var opts = this.nav.getOptions([{
       x:      300,
       width:  40,
@@ -39,14 +29,11 @@ buster.testCase("Test CV Navigation", {
       height: 40
     }]);
     assert.equals(opts, {
-      front: 0,
-      right: 0,
-      up: 0.125,
-      clockwise: 0
+      down: 0.125
     });
   },
   
-  "test should move down when rectangle below center": function () {
+  "test should move up when rectangle above center": function () {
     var opts = this.nav.getOptions([{
       x:      300,
       width:  40,
@@ -54,10 +41,7 @@ buster.testCase("Test CV Navigation", {
       height: 40
     }]);
     assert.equals(opts, {
-      front: 0,
-      right: 0,
-      up: -0.25,
-      clockwise: 0
+      up: 0.25
     });
   },
   
@@ -69,9 +53,6 @@ buster.testCase("Test CV Navigation", {
       height: 40
     }]);
     assert.equals(opts, {
-      front: 0,
-      right: 0,
-      up: 0,
       clockwise: 0.1875
     });
   },
@@ -84,10 +65,7 @@ buster.testCase("Test CV Navigation", {
       height: 40
     }]);
     assert.equals(opts, {
-      front: 0,
-      right: 0,
-      up: 0,
-      clockwise: -0.1875
+      counterClockwise: 0.1875
     });
   }
 });
