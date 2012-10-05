@@ -7,7 +7,7 @@ buster.testCase("Test CV Navigation", {
     this.nav = new Navigation(640, 320);
   },
   "test should start with hover navigation data": function () {
-    var opts = this.nav.getOptions();
+    var opts = this.nav.getOptions([]);
     assert.equals(opts, {});
   },
   
@@ -59,6 +59,29 @@ buster.testCase("Test CV Navigation", {
   
   "test should rotate counter-clockwise when rectangle left of center": function () {
     var opts = this.nav.getOptions([{
+      x:      240,
+      width:  40,
+      y:      140,
+      height: 40
+    }]);
+    assert.equals(opts, {
+      counterClockwise: 0.1875
+    });
+  },
+  
+  "test should choose closest rectangle to previous": function () {
+    var opts = this.nav.getOptions([{
+      x:      230,
+      width:  40,
+      y:      160,
+      height: 40
+    }]);
+    opts = this.nav.getOptions([{
+      x:      20,
+      width:  40,
+      y:      10,
+      height: 40
+    }, {
       x:      240,
       width:  40,
       y:      140,

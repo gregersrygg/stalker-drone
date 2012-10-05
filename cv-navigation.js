@@ -1,23 +1,58 @@
-var Navigation = function(width, height) {
+var Navigation = function(width, height, damping) {
   this.width = width;
   this.height = height;
+  this.damping = damping || 1;
+  this.last;
   this.reset();
 };
 
+function getCenter (rect) {
+  console.log("GET CENTER: ", rect);
+  if (!rect) return null;
+  return {
+    x: (rect.x + rect.width/2),
+    y: (rect.y + rect.height/2)
+  };
+}
+
+function getDistance (a, b) {
+  var x = b.x - a.x, y = b.y - a.y;
+  return Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) );
+}
+
 Navigation.prototype.getOptions = function(rectangles) {
-  var centerX, centerY, rect;
-  if (!rectangles || rectangles.length !== 1) {
+  var center, rect = this.selectRectangle(rectangles);
+  if (!rect) {
     this.reset();
   } else {
-    rect = rectangles[0];
-    centerX = rect.x + rect.width/2;
-    centerY = rect.y + rect.height/2;
+    center = getCenter(rect);
     
-    this.z = ((this.height/2) - centerY) / (this.height/2);
-    this.jaw = ((this.width/2) - centerX) / -(this.width/2);
+    this.z = ((this.height/2) - center.y) / (this.height/2);
+    this.jaw = ((this.width/2) - center.x) / -(this.width/2);
   }
   
   return this.json();
+};
+
+Navigation.prototype.selectRectangle = function (rectangles) {
+  var last = this.last;
+  if (!this.last && rectangles.length != 1) {
+  } else if (!this.last && rectangles.length === 1) {
+    last = rectangles[0];
+  } else if (last) {
+    rectangles = rectangles.sort(function (a, b) {
+      var aXY = getCenter(a);
+      var bXY = getCenter(b);
+      var lastXY = getCenter(last);
+      var aDist = getDistance(aXY, lastXY);
+      var bDist = getDistance(bXY, lastXY);
+      return aDist - bDist;
+    });
+    last = rectangles[0];
+  }
+  
+  this.last = last;
+  return last;
 };
 
 Navigation.prototype.reset = function () {
@@ -27,18 +62,18 @@ Navigation.prototype.reset = function () {
 };
 
 Navigation.prototype.json = function () {
-  var data = {}, damping = 3;
+  var data = {};
   
   if (this.z > 0) {
-    data.up = this.z / damping;
+    data.up = this.z / this.damping;
   } else if (this.z < 0) {
-    data.down = -this.z / damping;
+    data.down = -this.z / this.damping;
   }
   
   if (this.jaw > 0) {
-    data.clockwise = this.jaw / damping;
+    data.clockwise = this.jaw / this.damping;
   } else if (this.jaw < 0) {
-    data.counterClockwise = -this.jaw / damping;
+    data.counterClockwise = -this.jaw / this.damping;
   }
   
   return data;
