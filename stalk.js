@@ -18,7 +18,7 @@ var mimeTypes = {
   'html':    'text/html',
   'js':      'text/javascript'
 };
-var nav = new Navigation(640, 360, 3);
+var nav = new Navigation(640, 360, 1.5);
 
 
 var pngStream = arDrone.createPngStream();
@@ -41,14 +41,14 @@ setTimeout(function() {
   ref.emergency = false;
   ref.fly       = true;
 
-}, 1000);
+}, 8000);
 
-setTimeout(function() {
+/*setTimeout(function() {
   console.log('Landing ...');
 
   ref.fly = false;
   pcmd = {};
-}, 8000);
+}, 8000);*/
 
 setInterval(function() {
   control.ref(ref);
@@ -73,7 +73,7 @@ var detectFace = function(){
        pcmd = nav.getOptions(faces);
        console.log(pcmd);
        
-       lastPng = im.toBuffer();
+       //lastPng = im.toBuffer();
      });
    });
 };
@@ -88,7 +88,7 @@ var faceDetectLoop = function(){
 };
 faceDetectLoop();
 
-var server = http.createServer(function(req, res) {
+/*var server = http.createServer(function(req, res) {
   
   if (req.url === '/cam.png') {
   
@@ -114,9 +114,9 @@ var server = http.createServer(function(req, res) {
     
   }
   
-});
-
+});*/
+/*
 server.listen(8080, function() {
   log('Serving latest png on port 8080 ...');
 });
-
+*/
