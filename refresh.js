@@ -9,6 +9,10 @@ function refreshCam() {
     setTimeout(refreshCam, 250);
   };
   
+  img.onerror = function () {
+    setTimeout(refreshCam, 250);
+  };
+  
   img.id = old.id;
   img.src = old.src;
 }
