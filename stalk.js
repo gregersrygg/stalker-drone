@@ -3,6 +3,8 @@ var http = require('http');
 var cv = require('opencv');
 var fs      = require('fs');
 var arDrone = require('ar-drone');
+var Navigation = require('./cv-navigation.js');
+var control = arDrone.createUdpControl();
 var log = console.log;
 
 
@@ -16,6 +18,7 @@ var mimeTypes = {
   'html':    'text/html',
   'js':      'text/javascript'
 };
+var nav = new Navigation(640, 480);
 
 var pngStream = arDrone.createPngStream();
 
@@ -26,12 +29,38 @@ pngStream
     lastPngBuffer = pngBuffer;
 });
 
+var ref  = {};
+var pcmd = {};
+
+/*
+console.log('Recovering from emergency mode if there was one ...');
+ref.emergency = true;
+setTimeout(function() {
+  console.log('Takeoff ...');
+
+  ref.emergency = false;
+  ref.fly       = true;
+
+}, 1000);
+
+setTimeout(function() {
+  console.log('Landing ...');
+
+  ref.fly = false;
+  pcmd = {};
+}, 8000);
+
+setInterval(function() {
+  control.ref(ref);
+  control.pcmd(pcmd);
+  control.flush();
+}, 30);*/
 
 var detectFace = function(){
   cv.readImage(lastPngBuffer, function(err, im){
-     log("Size: " + im.width() + "x" + im.height());
-     im.resize(im.width() / 2, im.height() / 2);
-     log("Resize: " + im.width() + "x" + im.height());
+     //log("Size: " + im.width() + "x" + im.height());
+     //im.resize(im.width() / 2, im.height() / 2);
+     //log("Resize: " + im.width() + "x" + im.height());
 
      im.detectObject('./data/haarcascade_frontalface_alt2.xml', {}, function(err, faces) {
 
@@ -40,12 +69,10 @@ var detectFace = function(){
          face = faces[k];
          im.rectangle([face.x, face.y], [face.x + face.width, face.y + face.height], COLOR, 2);
        }
-
-            /*var methods = []
-            for(var j in im) {
-                if(typeof im[j] === "function") methods.push(j);
-            }
-            log(methods.sort().join("\n"));*/
+       
+       pcmd = nav.getOptions(faces);
+       console.log(pcmd);
+       
        lastPng = im.toBuffer();
      });
    });
