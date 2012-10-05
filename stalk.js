@@ -18,7 +18,7 @@ var mimeTypes = {
   'html':    'text/html',
   'js':      'text/javascript'
 };
-var nav = new Navigation(640, 480);
+var nav = new Navigation(640, 360);
 
 
 var pngStream = arDrone.createPngStream();
