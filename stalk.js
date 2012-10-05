@@ -18,7 +18,7 @@ var mimeTypes = {
   'html':    'text/html',
   'js':      'text/javascript'
 };
-var nav = new Navigation(640, 360);
+var nav = new Navigation(640, 360, 2);
 
 
 var pngStream = arDrone.createPngStream();
@@ -33,7 +33,6 @@ pngStream
 var ref  = {};
 var pcmd = {};
 
-/*
 console.log('Recovering from emergency mode if there was one ...');
 ref.emergency = true;
 setTimeout(function() {
@@ -42,21 +41,21 @@ setTimeout(function() {
   ref.emergency = false;
   ref.fly       = true;
 
-}, 1000);
+}, 8000);
 
-setTimeout(function() {
+/*setTimeout(function() {
   console.log('Landing ...');
 
   ref.fly = false;
   pcmd = {};
-}, 8000);
+}, 8000);*/
 
 setInterval(function() {
   control.ref(ref);
   control.pcmd(pcmd);
   control.flush();
-}, 30);*/
-
+}, 30);
+var i = 0
 var detectFace = function(){
   cv.readImage(lastPngBuffer, function(err, im){
      //log("Size: " + im.width() + "x" + im.height());
@@ -73,8 +72,12 @@ var detectFace = function(){
        
        pcmd = nav.getOptions(faces);
        console.log(pcmd);
+       i++;
+       if(i % 10 == 0){
+         im.resize(im.width() / 2, im.height() / 2)
+         lastPng = im.toBuffer();
+       }
        
-       lastPng = im.toBuffer();
      });
    });
 };
@@ -85,7 +88,7 @@ var faceDetectLoop = function(){
     log('Detecting Face.');
     detectFace();
   };
-  setTimeout(faceDetectLoop, 500);
+  setTimeout(faceDetectLoop, 30);
 };
 faceDetectLoop();
 
